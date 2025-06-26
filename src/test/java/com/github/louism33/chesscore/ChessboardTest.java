@@ -1,29 +1,31 @@
 package com.github.louism33.chesscore;
 
-import com.github.louism33.utils.MoveParserFromAN;
-import org.junit.Assert;
-import org.junit.jupiter.api.Test;
-
 import static com.github.louism33.chesscore.BoardConstants.BLACK_PAWN;
 import static com.github.louism33.chesscore.BoardConstants.WHITE_PAWN;
 import static com.github.louism33.chesscore.MoveParser.getMovingPieceInt;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ChessboardTest {
+import org.junit.jupiter.api.Test;
+
+import com.github.louism33.utils.MoveParserFromAN;
+
+class ChessboardTest {
 
     @Test
-    void previousMoveWasPawnPushToSixTest(){
+    void previousMoveWasPawnPushToSixTest() {
         String fen = "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -";
         Chessboard board = new Chessboard(fen);
         final int move = MoveParserFromAN.buildMoveFromLAN(board, "c4c3");
         final int turnBefore = board.turn;
         board.makeMoveAndFlipTurn(move);
 
-        Assert.assertTrue(board.previousMoveWasPawnPushToSix());
-        Assert.assertTrue(MoveParser.moveIsPawnPushSix(turnBefore, move));
+        assertTrue(board.previousMoveWasPawnPushToSix());
+        assertTrue(MoveParser.moveIsPawnPushSix(turnBefore, move));
     }
 
     @Test
-    void previousMoveWasPawnPushToSevenTest(){
+    void previousMoveWasPawnPushToSevenTest() {
         String fen = "8/7p/5k2/5p2/p4P2/PrppPK2/1P1R3P/8 b - -";
         Chessboard board = new Chessboard(fen);
 
@@ -31,12 +33,12 @@ public class ChessboardTest {
         final int turnBefore = board.turn;
         board.makeMoveAndFlipTurn(move);
 
-        Assert.assertTrue(board.previousMoveWasPawnPushToSeven());
-        Assert.assertTrue(MoveParser.moveIsPawnPushSeven(turnBefore, move));
+        assertTrue(board.previousMoveWasPawnPushToSeven());
+        assertTrue(MoveParser.moveIsPawnPushSeven(turnBefore, move));
     }
 
     @Test
-    void previousMoveWasPawnPushToSeven2Test(){
+    void previousMoveWasPawnPushToSeven2Test() {
         String fen = "8/8/PPPPPPPP/8/k6K/pppppppp/8/8 b - -";
         Chessboard board = new Chessboard(fen);
 
@@ -52,9 +54,9 @@ public class ChessboardTest {
                 continue;
             }
 
-            Assert.assertTrue(MoveParser.moveIsPawnPushSeven(board.turn, move));
+            assertTrue(MoveParser.moveIsPawnPushSeven(board.turn, move));
             board.makeMoveAndFlipTurn(move);
-            Assert.assertTrue(board.previousMoveWasPawnPushToSeven());
+            assertTrue(board.previousMoveWasPawnPushToSeven());
             board.unMakeMoveAndFlipTurn();
         }
 
@@ -70,15 +72,15 @@ public class ChessboardTest {
                 continue;
             }
 
-            Assert.assertTrue(MoveParser.moveIsPawnPushSeven(board.turn, move));
+            assertTrue(MoveParser.moveIsPawnPushSeven(board.turn, move));
             board.makeMoveAndFlipTurn(move);
-            Assert.assertTrue(board.previousMoveWasPawnPushToSeven());
+            assertTrue(board.previousMoveWasPawnPushToSeven());
             board.unMakeMoveAndFlipTurn();
         }
     }
 
     @Test
-    void previousMoveWasPawnPushToSix2Test(){
+    void previousMoveWasPawnPushToSix2Test() {
         String fen = "k6K/8/8/PPPPPPPP/pppppppp/8/8/8 b - -";
         Chessboard board = new Chessboard(fen);
 
@@ -94,9 +96,9 @@ public class ChessboardTest {
                 continue;
             }
 
-            Assert.assertTrue(MoveParser.moveIsPawnPushSix(board.turn, move));
+            assertTrue(MoveParser.moveIsPawnPushSix(board.turn, move));
             board.makeMoveAndFlipTurn(move);
-            Assert.assertTrue(board.previousMoveWasPawnPushToSix());
+            assertTrue(board.previousMoveWasPawnPushToSix());
             board.unMakeMoveAndFlipTurn();
         }
 
@@ -112,22 +114,66 @@ public class ChessboardTest {
                 continue;
             }
 
-            Assert.assertTrue(MoveParser.moveIsPawnPushSix(board.turn, move));
+            assertTrue(MoveParser.moveIsPawnPushSix(board.turn, move));
             board.makeMoveAndFlipTurn(move);
-            Assert.assertTrue(board.previousMoveWasPawnPushToSix());
+            assertTrue(board.previousMoveWasPawnPushToSix());
             board.unMakeMoveAndFlipTurn();
         }
     }
 
     @Test
-    public void moveIsCaptureOfLastMovePieceTest() {
-        String fen = "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -";
-        Chessboard board = new Chessboard(fen);
+    void moveIsCaptureOfLastMovePieceTest() {
+        final String fen = "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -";
+        final Chessboard board = new Chessboard(fen);
 
         final int move = MoveParserFromAN.buildMoveFromLAN(board, "b3b2");
         board.makeMoveAndFlipTurn(move);
         final int moveC = MoveParserFromAN.buildMoveFromLAN(board, "d2b2");
-        Assert.assertTrue(board.moveIsCaptureOfLastMovePiece(moveC));
+        assertTrue(board.moveIsCaptureOfLastMovePiece(moveC));
     }
-}
 
+    @Test
+    void toStringTest() {
+        final String fen = "8/7p/5k2/5p2/p1p2P2/Pr1pPK2/1P1R3P/8 b - -";
+        final Chessboard board = new Chessboard(fen);
+        // @formatter:off
+        @SuppressWarnings("unused")
+        final String expectedOrig = """
+
+   a b c d e f g h
+  +---------------+
+8 |. . . . . . . .| 8
+7 |. . . . . . . p| 7
+6 |. . . . . k . .| 6
+5 |. . . . . p . .| 5
+4 |p . p . . P . .| 4
+3 |P r . p P K . .| 3
+2 |. P . R . . . P| 2
+1 |. . . . . . . .| 1
+  +---------------+
+   a b c d e f g h
+
+It is black's turn.
+""";
+        final String expected = """
+
+   a b c d e f g h
+  +---------------+
+8 |. . . . . . . .| 8
+7 |. . . . . . . ♟| 7
+6 |. . . . . ♚ . .| 6
+5 |. . . . . ♟ . .| 5
+4 |♟ . ♟ . . ♙ . .| 4
+3 |♙ ♜ . ♟ ♙ ♔ . .| 3
+2 |. ♙ . ♖ . . . ♙| 2
+1 |. . . . . . . .| 1
+  +---------------+
+   a b c d e f g h
+
+It is black's turn.
+""";
+        // @formatter:on
+        assertEquals(expected, board.toString());
+    }
+
+}

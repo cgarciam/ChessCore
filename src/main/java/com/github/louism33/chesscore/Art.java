@@ -1,16 +1,50 @@
 package com.github.louism33.chesscore;
 
-public final class Art {
+import java.util.Map;
 
-    public static String boardArt(Chessboard board) {
-        StringBuilder s = new StringBuilder(512);
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@SuppressWarnings("unused")
+public final class Art {
+    /** This map will hold the ASCII representations of the chess pieces. */
+    private static final Map<Integer, String> PIECE_MAP;
+
+    static {
+        // Initialize the pieceMap with the ASCII characters for the pieces.
+        PIECE_MAP = new java.util.HashMap<>();
+        PIECE_MAP.put(1, "♙"); // White Pawn
+        PIECE_MAP.put(2, "♘"); // White Knight
+        PIECE_MAP.put(3, "♗"); // White Bishop
+        PIECE_MAP.put(4, "♖"); // White Rook
+        PIECE_MAP.put(5, "♕"); // White Queen
+        PIECE_MAP.put(6, "♔"); // White King
+        PIECE_MAP.put(7, "♟"); // Black Pawn
+        PIECE_MAP.put(8, "♞"); // Black Knight
+        PIECE_MAP.put(9, "♝"); // Black Bishop
+        PIECE_MAP.put(10, "♜"); // Black Rook
+        PIECE_MAP.put(11, "♛"); // Black Queen
+        PIECE_MAP.put(12, "♚"); // Black King
+        if (log.isTraceEnabled()) {
+            log.trace("Art class initialized with pieceMap: {}", PIECE_MAP);
+        }
+    }
+
+    private Art() {
+        // This class should not be instantiated: it is a utility class.
+    }
+
+    public static String boardArt(final Chessboard board) {
+        final StringBuilder s = new StringBuilder(512);
         s.append("   a b c d e f g h\n");
         s.append("  +---------------+\n");
         for (int y = 7; y >= 0; y--) {
             s.append(y + 1).append(" |");
             for (int x = 7; x >= 0; x--) {
                 s.append(pieceByNumberASCII(board.pieceSquareTable[x + y * 8]));
-                if (x>0) s.append(' ');
+                if (x > 0) {
+                    s.append(' ');
+                }
             }
             s.append("| ").append(y + 1);
             s.append('\n');
@@ -21,7 +55,7 @@ public final class Art {
         return s.toString();
     }
 
-    private static String pieceByNumberASCII(int s){
+    private static String pieceByNumberASCIIOrig(final int s) {
         switch (s) {
             case 1: return ("P");
             case 2: return ("N");
@@ -39,51 +73,40 @@ public final class Art {
         }
     }
 
-    public static String makeMoveToStringTEMP (int l){
-        String binaryString = Integer.toBinaryString(l);
-        int numberOfPaddingZeros = 32 - binaryString.length();
-        StringBuilder sb = new StringBuilder(32);
-        while (sb.length() < numberOfPaddingZeros){
-            sb.append('0');
-        }
-
-        String temp = sb + binaryString;
-        return temp.substring(0, 4) + '\n' +
-                temp.substring(4, 8) + '\n' +
-                temp.substring(8, 12) + '\n' +
-                temp.substring(12, 16) + '\n' +
-                temp.substring(16, 20) + '\n' +
-                temp.substring(20, 24) + '\n' +
-                temp.substring(24, 28) + '\n' +
-                temp.substring(28, 32) + '\n';
+    private static String pieceByNumberASCII(final int s) {
+        // There is no "intrinsic" better performance in any of these 3 methods.
+        return PIECE_MAP.getOrDefault(s, ".");
     }
 
-    public static void printLong(long l){
-        for (int y = 0; y < 8; y++) {
-            for (int i = 0; i < 8; i++) {
-                StringBuilder s = new StringBuilder(Long.toBinaryString(l));
-                while (s.length() < 64) {
-                    s.insert(0, '0');
-                }
-                System.out.print(s.charAt(y * 8 + i));
-            }
-            System.out.println();
+    private static String pieceByNumberASCII1(final int s) {
+        switch (s) {
+        case 1:
+            return ("♙");
+        case 2:
+            return ("♘");
+        case 3:
+            return ("♗");
+        case 4:
+            return ("♖");
+        case 5:
+            return ("♕");
+        case 6:
+            return ("♔");
+        case 7:
+            return ("♟");
+        case 8:
+            return ("♞");
+        case 9:
+            return ("♝");
+        case 10:
+            return ("♜");
+        case 11:
+            return ("♛");
+        case 12:
+            return ("♚");
+        default:
+            return (".");
         }
-        System.out.println("---");
     }
 
-    public static String pieceSquareTable(int[] pieceSquareTable){
-        StringBuilder s = new StringBuilder(128);
-        for (int i = 7; i >= 0; i--) {
-            s.append("   ");
-            for (int j = 7; j >= 0; j--) {
-                int i1 = pieceSquareTable[i * 8 + j];
-                String str = i1 == 0 ? "." : Integer.toHexString(i1);
-                s.append(str).append(' ');
-//                System.out.print(String.format("%4d", INITIAL_PIECE_SQUARES[i * 8 + j]));
-            }
-            s.append('\n');
-        }
-        return s.toString();
-    }
 }
