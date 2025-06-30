@@ -1,4 +1,4 @@
-package utils;
+package com.github.louism33.utils;
 
 import com.github.louism33.utils.ExtendedPositionDescriptionParser;
 import org.junit.Assert;
@@ -16,13 +16,13 @@ public class PgnParser2Test {
 
     @Parameterized.Parameters(name = "{index} Test: {1}")
     public static Collection<Object[]> data() {
-        List<Object[]> answers = new ArrayList<>();
+        final List<Object[]> answers = new ArrayList<>();
 
-        for (int i = 0; i < splitUpPositions.length; i++) {
+        for (int i = 0; i < SPLIT_UP_POSITIONS.length; i++) {
 
-            String splitUpWAC = splitUpPositions[i];
-            Object[] objectAndName = new Object[2];
-            ExtendedPositionDescriptionParser.EPDObject EPDObject = parseEDPPosition(splitUpWAC);
+            final String splitUpWAC = SPLIT_UP_POSITIONS[i];
+            final Object[] objectAndName = new Object[2];
+            final ExtendedPositionDescriptionParser.EPDObject EPDObject = parseEDPPosition(splitUpWAC);
             objectAndName[0] = EPDObject;
             objectAndName[1] = EPDObject.getId();
             answers.add(objectAndName);
@@ -32,10 +32,11 @@ public class PgnParser2Test {
 
     private static ExtendedPositionDescriptionParser.EPDObject EPDObject;
 
-    public PgnParser2Test(Object edp, Object name) {
+    public PgnParser2Test(final Object edp, final Object name) {
         EPDObject = (ExtendedPositionDescriptionParser.EPDObject) edp;
     }
 
+    @SuppressWarnings("unused")
     @org.junit.Test
     public void test() {
         try {
@@ -47,7 +48,7 @@ public class PgnParser2Test {
         }
     }
 
-    private static final String positions = "" +
+    private static final String POSITIONS = "" +
             "1k2r2r/1bq2p2/pn4p1/3pP3/pbpN1P1p/4QN1B/1P4PP/2RR3K b - - bm Nd7; c0 \"Nd7=10, Bc5=8, Bc6=2, Be7=7\"; id \"STS: Knight Outposts/Repositioning/Centralization.001\";\n" +
             "1q2bn2/6pk/2p1pr1p/2Q2p1P/1PP5/5N2/5PP1/4RBK1 w - - bm Ne5; c0 \"Ne5=10, Nd4=8, Ra1=6, b5=9\"; id \"STS: Knight Outposts/Repositioning/Centralization.002\";\n" +
             "1r1q1rk1/1b1n1p1p/p2b1np1/3pN3/3P1P2/P1N5/3BB1PP/1R1Q1RK1 b - - bm Ne4; c0 \"Ne4=10, Bxa3=6, Nb6=6\"; id \"STS: Knight Outposts/Repositioning/Centralization.003\";\n" +
@@ -150,5 +151,5 @@ public class PgnParser2Test {
             "rqr3k1/1p2bppp/3pn3/p3p1Pn/P3P3/1PNBBP2/1P1Q3P/2KR3R b - - bm Nd4; c0 \"Nd4=10, Nef4=6, Nhf4=5\"; id \"STS: Knight Outposts/Repositioning/Centralization.100\";" +
             "";
     
-    private static final String[] splitUpPositions = positions.split("\n");
+    private static final String[] SPLIT_UP_POSITIONS = POSITIONS.split("\n");
 }

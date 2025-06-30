@@ -1,6 +1,5 @@
-package utils;
+package com.github.louism33.utils;
 
-import com.github.louism33.chesscore.MoveParser;
 import com.github.louism33.utils.ExtendedPositionDescriptionParser;
 import org.junit.Assert;
 import org.junit.runner.RunWith;
@@ -17,13 +16,13 @@ public class PGNParserTest {
 
     @Parameterized.Parameters(name = "{index} Test: {1}")
     public static Collection<Object[]> data() {
-        List<Object[]> answers = new ArrayList<>();
+        final List<Object[]> answers = new ArrayList<>();
 
-        for (int i = 0; i < splitUpPositions.length; i++) {
+        for (int i = 0; i < SPLIT_UP_POSITIONS.length; i++) {
 
-            String splitUpWAC = splitUpPositions[i];
-            Object[] objectAndName = new Object[2];
-            ExtendedPositionDescriptionParser.EPDObject EPDObject = parseEDPPosition(splitUpWAC);
+            final String splitUpWAC = SPLIT_UP_POSITIONS[i];
+            final Object[] objectAndName = new Object[2];
+            final ExtendedPositionDescriptionParser.EPDObject EPDObject = parseEDPPosition(splitUpWAC);
             objectAndName[0] = EPDObject;
             objectAndName[1] = EPDObject.getId();
             answers.add(objectAndName);
@@ -33,22 +32,23 @@ public class PGNParserTest {
 
     private static ExtendedPositionDescriptionParser.EPDObject EPDObject;
 
-    public PGNParserTest(Object edp, Object name) {
+    public PGNParserTest(final Object edp, final Object name) {
         EPDObject = (ExtendedPositionDescriptionParser.EPDObject) edp;
     }
 
     @org.junit.Test
+    @SuppressWarnings("unused")
     public void test() {
         try {
-            int[] winningMoves = EPDObject.getBestMovesFromComments();
-            int[] losingMoves = EPDObject.getAvoidMoves();
-        } catch (Exception | Error e) {
+            final int[] winningMoves = EPDObject.getBestMovesFromComments();
+            final int[] losingMoves = EPDObject.getAvoidMoves();
+        } catch (final Exception | Error e) {
             e.printStackTrace();
             Assert.fail();
         }
     }
 
-    private static final String positions = "" +
+    private static final String POSITIONS = "" +
             "1k2r3/1p1bP3/2p2p1Q/Ppb5/4Rp1P/2q2N1P/5PB1/6K1 b - - bm Kc7; id \"STS(v11.0) King Activity.001\"; c0 \"Kc7=10, Kc8=4, Qa1+=4\";\n" +
             "1k2r3/p7/Pp1pP1p1/4p2p/2r4P/5P1B/4RB1K/8 w - - bm Kg3; id \"STS(v11.0) King Activity.002\"; c0 \"Kg3=10, Kg2=5, Re1=5, Re3=3\";\n" +
             "1k5r/6p1/p2b4/7p/2r1p2P/R1B1P3/6P1/2R3K1 b - - bm Ka7; id \"STS(v11.0) King Activity.003\"; c0 \"Ka7=10, Bxa3=3, Kb7=4, Rc6=2\";\n" +
@@ -151,5 +151,5 @@ public class PGNParserTest {
             "R7/2k5/2p2p2/4p3/1pp1P1b1/n7/6P1/2R2K2 b - - bm Kb6; id \"STS(v11.0) King Activity.100\"; c0 \"Kb6=10\";" +
             "";
 
-    private static final String[] splitUpPositions = positions.split("\n");
+    private static final String[] SPLIT_UP_POSITIONS = POSITIONS.split("\n");
 }

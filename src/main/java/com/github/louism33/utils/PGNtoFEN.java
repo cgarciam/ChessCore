@@ -9,9 +9,13 @@ import java.util.List;
 
 public final class PGNtoFEN {
 
-    // transform pgn file into one fen per move
+    private PGNtoFEN() {
+        // This is a utility class and should not be instantiated.
+    }
 
-    public static void main(String[] args) throws IOException {
+    // transform pgn file into one fen per move
+    // TODO: To move this main method to a test class.
+    public static void main(final String... args) throws IOException {
         final String dir = System.getProperty("user.dir");
         File file = new File(dir + "/pgnExampleFile.pgn");
         String dest = dir + "/result.fen";
@@ -26,25 +30,20 @@ public final class PGNtoFEN {
             file.createNewFile();
             return;
         }
-        
-        try {
-            transformPGNFile(file, dest);
-            final List<TexelPosLoader.TexelPos> texelPosList = TexelPosLoader.readFile(dest);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
+        transformPGNFile(file, dest);
+        @SuppressWarnings("unused")
+        final List<TexelPosLoader.TexelPos> texelPosList = TexelPosLoader.readFile(dest);
     }
 
-
-    public static void transformPGNFile(File pgnFile, String destinationUrl) throws Exception {
+    public static void transformPGNFile(final File pgnFile, final String destinationUrl) throws IOException {
 
         try (BufferedReader br = new BufferedReader(new FileReader(pgnFile));
              BufferedWriter bw = new BufferedWriter(new FileWriter(destinationUrl))) {
             
             String line;
             StringBuilder pgn = new StringBuilder(512);
-            List<String> pgns = new ArrayList<>();
+            final List<String> pgns = new ArrayList<>();
 
             while ((line = br.readLine()) != null) {
                 if (line.length() < 1) {
@@ -70,9 +69,9 @@ public final class PGNtoFEN {
                 final String pgn1 = pgns.get(p);
                 final PGNParser.TexelObject texelObject = PGNParser.parsePGNForTexel(pgn1);
                 final int numberOfBookMoves = texelObject.numberOfBookMoves;
-                List<String> s = texelObject.allMoves;
+                final List<String> s = texelObject.allMoves;
 
-                StringBuilder sb = new StringBuilder(1024);
+                final StringBuilder sb = new StringBuilder(1024);
                 
                 Chessboard board = new Chessboard();
                 // ignore actual checkmate move
@@ -84,7 +83,7 @@ public final class PGNtoFEN {
                     int move1 = 0;
                     try {
                         move1 = MoveParserFromAN.buildMoveFromANWithOO(board, move);
-                    } catch (Exception | Error e) {
+                    } catch (final Exception | Error e) {
                         System.out.println(board);
                         System.out.println(s.get(Math.max(i - 1, 0)));
                         System.out.println(s.get(i));

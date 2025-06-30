@@ -21,23 +21,26 @@ public final class ExtendedPositionDescriptionParser {
     private static final Matcher idMatcher = idPattern.matcher("");
     private static final Matcher commentMatcher = commentPattern.matcher("");
 
-    public static EPDObject parseEDPPosition(String edpPosition){
+    public static EPDObject parseEDPPosition(final String edpPosition) {
         boardMatcher.reset(edpPosition);
         bmMatcher.reset(edpPosition);
         amMatcher.reset(edpPosition);
         idMatcher.reset(edpPosition);
         commentMatcher.reset(edpPosition);
 
-        Chessboard board = new Chessboard();
-        String fen = "";
+        final Chessboard board;
+        final String fen;
         if (boardMatcher.find()) {
             fen = boardMatcher.group(1);
             board = new Chessboard(fen);
+        } else {
+            board = new Chessboard();
+            fen = "";
         }
 
-        int[] goodMoves = new int[8];
+        final int[] goodMoves = new int[8];
         if (bmMatcher.find()) {
-            String[] bms = bmMatcher.group(1).split(" ");
+            final String[] bms = bmMatcher.group(1).split(" ");
             int length = bms.length;
             for (int i = 0; i < length; i++) {
                 goodMoves[i] = (MoveParserFromAN.buildMoveFromANWithOO(board, bms[i]));
@@ -45,10 +48,10 @@ public final class ExtendedPositionDescriptionParser {
             goodMoves[goodMoves.length - 1] += length;
         }
 
-        int[] badMoves = new int[8];
+        final int[] badMoves = new int[8];
         if (amMatcher.find()) {
-            String[] ams = amMatcher.group(1).split(" ");
-            int length = ams.length;
+            final String[] ams = amMatcher.group(1).split(" ");
+            final int length = ams.length;
             for (int i = 0; i < length; i++) {
                 badMoves[i] = (MoveParserFromAN.buildMoveFromANWithOO(board, ams[i]));
             }
@@ -143,7 +146,7 @@ public final class ExtendedPositionDescriptionParser {
         public String toString() {
             return "EPDObject{" +
                     '\n' +fullString+
-                    (id.length() > 0 ? "\n     id='" + id + '\'' : "") +
+                    (!id.isEmpty() ? "\n     id='" + id + '\'' : "") +
                     (this.scoredMoves == null ? "" : "\n" + this.scoredMoves) +
                     "\n     boardFen='" + boardFen + '\'' +
                     (bestMoves[bestMoves.length - 1] > 0 ? "\n     bestMoves=" + Arrays.toString(MoveParser.toString(bestMoves)) : "") +

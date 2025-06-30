@@ -1,21 +1,26 @@
 package com.github.louism33.utils;
 
-import org.junit.Assert;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@SuppressWarnings("ALL")
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
+
 public final class PGNParser {
+
+    private PGNParser() {
+        // This is a utility class and should not be instantiated.
+    }
 
     public static class TexelObject {
         public List<String> allMoves;
         public float winner;
         public int numberOfBookMoves = 0;
 
-        public TexelObject(List<String> allMoves, int numberOfBookMoves, float winner) {
+        public TexelObject(final List<String> allMoves, final int numberOfBookMoves, final float winner) {
             this.allMoves = allMoves;
             this.numberOfBookMoves = numberOfBookMoves;
             this.winner = winner;
@@ -53,13 +58,13 @@ public final class PGNParser {
 
         pgn = pgn.replaceAll("#.*", "");
 
-        pgn = pgn.replaceAll("\n", " ");
+        pgn = pgn.replace('\n', ' ');
         pgn = pgn.replaceAll("  ", " ");
         pgn = pgn.replaceAll("  ", " ");
 
-        String[] s = pgn.split(" ");
+        final String[] s = pgn.split(" ");
 
-        List<String> ss = new ArrayList<>();
+        final List<String> ss = new ArrayList<>();
         // only grab moves that did not lead finding a mate
         for (int i = 0; i < s.length - 1; i++) {
             if (s[i] == null || s[i].equals("") || s[i].equals(" ")) {
@@ -68,14 +73,29 @@ public final class PGNParser {
             ss.add(s[i]);
         }
 
-        TexelObject tex = new TexelObject(ss, cnt, winner);
-        return tex;
+        return new TexelObject(ss, cnt, winner);
     }
 
+    /**
+     * Parses a PGN string and returns a list of plies.
+     * In chess, a ply refers to a half-move, meaning a move made by one side only.
+     *
+     * @param pgn The PGN string to parse.
+     * @return A list of moves extracted from the PGN string.
+     */
+    public static List<String> parsePGNSimple(final String pgn) {
+        return Arrays.stream(getPlies(pgn).split(" "))
+                .filter(StringUtils::isNotBlank)
+                .toList();
+    }
 
-    public static List<String> parsePGNSimple(String pgn){
-
-        pgn = pgn.replaceAll(" ?\\d+\\. ", " ");
+    /** Clean up the PGN string and return the plies.
+     *
+	 * @param pgn0 The PGN string to parse.
+	 * @return A cleaned-up string of moves extracted from the PGN string.
+	 */
+	private static String getPlies(final String pgn0) {
+		String pgn = pgn0.replaceAll(" ?\\d+\\. ", " ");
 
 //        pgn = pgn.replaceAll("\\{[\\w\\.]*} ?", "");
 
@@ -87,16 +107,7 @@ public final class PGNParser {
         pgn = pgn.replaceAll("  ", " ");
         pgn = pgn.replaceAll("  ", " ");
 
-        String[] s = pgn.split(" ");
+        return pgn;
+	}
 
-        List<String> ss = new ArrayList<>();
-        for (int i = 0; i < s.length; i++) {
-            if (s[i] == null || s[i].equals("") || s[i].equals(" ")) {
-                continue;
-            }
-            ss.add(s[i]);
-        }
-
-        return ss;
-    }
 }
